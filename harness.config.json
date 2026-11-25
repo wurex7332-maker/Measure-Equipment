@@ -1,11 +1,11 @@
 {
-  "bootstrapped": false,
+  "bootstrapped": true,
   "artifactsDir": "artifacts",
   "maxSkillChars": 7800,
   "commands": {
-    "lint": "",
-    "typecheck": "",
-    "testUnit": "",
+    "lint": "npm run lint",
+    "typecheck": "npm run typecheck",
+    "testUnit": "npm run test",
     "testE2e": "",
     "licenseCheck": "",
     "docsVerify": ""

@@ -17,9 +17,10 @@
 4. **许可证红线**：禁止引入 `AGPL` 或 `GPL-3.0` 等强传染性开源依赖（除非架构评审书面批准并隔离运行）。
 5. **数据变更向后兼容**：数据库或持久化结构变更必须提供向后兼容的 Migration 脚本，禁止单次发布直接删除或重命名线上正在使用的列。
 
-## 3. 项目专属架构红线（新项目初始化时按场景填写）
-> 以下条目由团队在基于模板创建具体项目时补充，并与 `docs/architecture/overview.md` 保持一致：
-- **技术栈与目录边界**：（示例：前后端物理隔离，共享类型统一沉淀在 `packages/shared`）
-- **核心分层约束**：（示例：Controller 仅做路由与入参校验，业务逻辑归属 Service，数据访问归属 Repository）
-- **UI 与交互规范**：（示例：前端统一使用 Element Plus，弹窗与消息提示收口至 `src/utils/feedback.ts`，禁止无作用域覆盖 `.el-*` 全局样式）
-- **默认加载技能**：见 `.agents/skills/` 目录
+## 3. 项目专属架构红线
+> 与 `docs/architecture/overview.md` 保持一致；本仓库为量具全生命周期与产品检验管理系统。
+- **技术栈与目录边界**：npm workspaces 单仓多包；后端固定在 `apps/api`（NestJS 10），前端固定在 `apps/web`（Vue 3 + Vite + Element Plus）。跨端共享类型沉淀到独立包后再引入，禁止前端直接引用后端内部实现。
+- **核心分层约束**：Controller 仅做路由、入参校验与鉴权守卫；业务规则（资格判定、状态流转、拦截）全部归属 Service；数据访问归属 Repository，禁止在 Controller 或 Service 中直接拼接 SQL。统一响应与异常由全局拦截器/过滤器处理，禁止手工拼装外层 JSON。
+- **UI 与交互规范**：前端统一使用 Element Plus 组件；弹窗、消息与二次确认收口至 `src/utils/feedback.ts`；禁止无 `scoped` 覆盖 `.el-*` 全局类名；异步页面必须覆盖加载态、空态、错误态与成功态。
+- **领域红线**：量具资格判定必须以服务端实时状态为准（放行、管制状态、校验有效期、免校批准、单位与人员授权、精度范围），未知或缺失信息一律默认拒绝；任何绕过资格校验提交正式检验记录的实现视为阻断项。
+- **默认加载技能**：见 `.agents/skills/` 目录（`nestjs-backend`、`vue3-frontend`、`security-and-testing`）。
