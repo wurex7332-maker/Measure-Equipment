@@ -32,10 +32,6 @@ jobs:
           BOOTSTRAPPED=$(node -p "Boolean(JSON.parse(require('fs').readFileSync('harness.config.json','utf8')).bootstrapped)")
           echo "bootstrapped=$BOOTSTRAPPED" >> "$GITHUB_OUTPUT"
 
-      - name: Install project dependencies
-        if: steps.mode.outputs.bootstrapped == 'true'
-        run: npm ci
-
       - name: Run Harness Gate (template / pre-scaffold mode)
         if: steps.mode.outputs.bootstrapped != 'true'
         env:
